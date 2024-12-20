@@ -126,6 +126,27 @@ res.status(201).json({message:"Recipe Updated Successfully"})
             res.status(500).json({error:"Failed To Update Recipe"})
         }
     })
+    async function dataByTitleAndUpdateIt(titleName,dataToBeUpdated){
+        try {
+            const updatedData=await RecipeModel.findOneAndUpdate({title:titleName},dataToBeUpdated,{new:true})
+            
+            return updatedData
+        } catch (error) {
+            throw error
+        }
+    }
+  app.post("/recipes/title/:titleName",async(req,res)=>{
+    try {
+        const updatedData=await dataByTitleAndUpdateIt(req.params.titleName,req.body)
+        if(updatedData){
+res.status(201).json({message:"Recipe Updated Successfully"})
+        }else{
+            res.status(404).json({error:"Recipe Not Found"})  
+        }
+    } catch (error) {
+        res.status(500).json({error:"Failed To Update Recipe"})
+    }
+  })
     app.listen(PORT,()=>{
         console.log("Connected to port ",PORT)
     })
