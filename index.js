@@ -147,6 +147,26 @@ res.status(201).json({message:"Recipe Updated Successfully"})
         res.status(500).json({error:"Failed To Update Recipe"})
     }
   })
+  async function deleteData(recipeId){
+    try {
+        const deletedData=await RecipeModel.findByIdAndDelete(recipeId)
+        return deletedData
+    } catch (error) {
+        throw error
+    }
+  }
+  app.delete("/recipes/:recipeId",async(req,res)=>{
+    try {
+      const deletedData=await deleteData(req.params.recipeId)
+      if(deletedData){
+res.status(201).json({message:"Recipe data deleted successfully"})
+      }  else{
+            res.status(404).json({error:"Recipe Not Found"})  
+        }
+    } catch (error) {
+       req.status(500).json({error:"Failed to delete data"}) 
+    }
+  })
     app.listen(PORT,()=>{
         console.log("Connected to port ",PORT)
     })
