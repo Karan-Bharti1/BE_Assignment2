@@ -26,6 +26,26 @@ app.post("/recipes",async(req,res)=>{
      res.status(500).json({error:"Failed to add data to the database"})   
     }
     })
+    async function readAllRecipes(){
+        try {
+            const recipes=await RecipeModel.find()
+            return recipes
+        } catch (error) {
+            throw error
+        }
+    }
+    app.get("/",async(req,res)=>{
+        try {
+          const recipes=await readAllRecipes() 
+          if(recipes.length!=0){
+            res.status(201).json(recipes)
+          } else{
+            res.status(404).json({error:"Recipes Not Found"})
+          }
+        } catch (error) {
+           res.status(500).json({error:"Failed to get recipes"}) 
+        }
+    })
     app.listen(PORT,()=>{
         console.log("Connected to port ",PORT)
     })
