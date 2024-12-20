@@ -86,6 +86,26 @@ app.post("/recipes",async(req,res)=>{
             res.status(500).json({error:"Failed to find recipes"})
         }
     })
+    async function readAllRecipesWithDifficultyLevel(difficultyLevel){
+        try {
+           const recipes=await RecipeModel.find({difficulty:difficultyLevel}) 
+           return recipes
+        } catch (error) {
+            throw error
+        }
+    }
+    app.get("/recipes/difficulty/:difficultyLevel",async(req,res)=>{
+        try {
+            const recipes=await readAllRecipesWithDifficultyLevel(req.params.difficultyLevel)
+            if(recipes.length!=0){
+                res.status(201).json(recipes)
+            }else{
+                res.status(404).json({error:"Recipes Not Found"})
+              }  
+        } catch (error) {
+            res.status(500).json({error:"Failed to find recipes"})
+        }
+    })
     app.listen(PORT,()=>{
         console.log("Connected to port ",PORT)
     })
