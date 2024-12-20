@@ -106,6 +106,26 @@ app.post("/recipes",async(req,res)=>{
             res.status(500).json({error:"Failed to find recipes"})
         }
     })
+    async function updateDataWithId(recipeId,dataToBeUpdated){
+        try {
+        const recipe=await RecipeModel.findByIdAndUpdate(recipeId,dataToBeUpdated,{new:true})   
+        return recipe 
+        } catch (error) {
+            throw error
+        }
+    }
+    app.post("/recipes/:recipeId",async(req,res)=>{
+        try {
+            const updatedData=await updateDataWithId(req.params.recipeId,req.body)
+            if(updatedData){
+res.status(201).json({message:"Recipe Updated Successfully"})
+            }else{
+                res.status(404).json({error:"Recipe Not Found"})  
+            }
+        } catch (error) {
+            res.status(500).json({error:"Failed To Update Recipe"})
+        }
+    })
     app.listen(PORT,()=>{
         console.log("Connected to port ",PORT)
     })
