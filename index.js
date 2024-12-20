@@ -46,6 +46,26 @@ app.post("/recipes",async(req,res)=>{
            res.status(500).json({error:"Failed to get recipes"}) 
         }
     })
+    async function readRecipesByTitle(titleName) {
+        try {
+            const recipe=await RecipeModel.findOne({title:titleName})
+            return recipe
+        } catch (error) {
+          throw error  
+        }
+    }
+    app.get("/recipes/:titleName",async(req,res)=>{
+        try {
+           const recipe =await readRecipesByTitle(req.params.titleName) 
+           if(recipe){
+            res.status(201).json(recipe)
+        } else{
+          res.status(404).json({error:"Recipe Not Found"})
+        }
+        } catch (error) {
+            req.status(500).json({error:"Failed to get recipe from the database"})
+        }
+    })
     app.listen(PORT,()=>{
         console.log("Connected to port ",PORT)
     })
